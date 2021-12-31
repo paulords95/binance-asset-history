@@ -17,8 +17,23 @@ export class BinanceService {
   }
 
   @Cron(CronExpression.EVERY_MINUTE)
-  async handleCron() {
-    await this.storeValuesInDb();
+  async handleCronMinute() {
+    await this.storeValuesInDb('EVERY_MINUTE');
+  }
+
+  @Cron(CronExpression.EVERY_5_MINUTES)
+  async handleCron5Minutes() {
+    await this.storeValuesInDb('EVERY_5_MINUTES');
+  }
+
+  @Cron(CronExpression.EVERY_HOUR)
+  async handleCronHour() {
+    await this.storeValuesInDb('EVERY_HOUR');
+  }
+
+  @Cron(CronExpression.EVERY_DAY_AT_NOON)
+  async handleCronDay() {
+    await this.storeValuesInDb('EVERY_DAY_AT_NOON');
   }
 
   getAccountAvailableBalance() {
@@ -55,10 +70,12 @@ export class BinanceService {
     });
   }
 
-  async storeValuesInDb() {
+  async storeValuesInDb(freq) {
     const values = await this.getAccountAvailableBalance();
 
     for (const value of values as any) {
+      value.storeFreq = freq;
+
       await this.balanceHistoryRepository.insertHistoryInput(value);
     }
   }

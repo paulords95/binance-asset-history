@@ -20,4 +20,5 @@ model balancehistory {
   balanceBRL String?
   priceUSD String?
   priceBRL String?
+  storeFreq String?
 }
