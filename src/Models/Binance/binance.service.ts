@@ -63,7 +63,11 @@ export class BinanceService {
     }
   }
 
-  async getBalance(): Promise<Object> {
+  async getBalanceBianance(): Promise<Object> {
     return this.getAccountAvailableBalance();
+  }
+
+  async getBalanceHistory(): Promise<Object> {
+    return this.balanceHistoryRepository.getBalance();
   }
 }

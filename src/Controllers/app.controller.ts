@@ -16,6 +16,10 @@ export class AppController {
 
   @Get('/binance')
   GetBalance() {
-    return this.binanceService.getBalance();
+    return this.binanceService.getBalanceBianance();
+  }
+  @Get('/binance-history')
+  GetBalanceHistory() {
+    return this.binanceService.getBalanceHistory();
   }
 }
