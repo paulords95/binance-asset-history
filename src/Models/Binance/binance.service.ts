@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { BalanceHistoryRepository } from 'src/database/repository/balancehistory.repository';
 const Binance = require('node-binance-api');
 
 @Injectable()
 export class BinanceService {
   binance;
-
+  count = 0;
   constructor(
     private readonly balanceHistoryRepository: BalanceHistoryRepository,
   ) {
@@ -16,9 +16,9 @@ export class BinanceService {
     });
   }
 
-  @Cron('45 * * * * *')
-  handleCron() {
-    console.log('Called when the current second is 45');
+  @Cron(CronExpression.EVERY_MINUTE)
+  async handleCron() {
+    await this.storeValuesInDb();
   }
 
   getAccountAvailableBalance() {
@@ -31,7 +31,7 @@ export class BinanceService {
         for (const balance of Object.entries(balances)) {
           const name = balance[0] as string;
           const assetBalance = balance[1] as any;
-          if (assetBalance.available > 0.00001) {
+          if (assetBalance.available > 0.0001) {
             const assetObj = {
               asset: name,
               balance: assetBalance.available,
@@ -56,20 +56,14 @@ export class BinanceService {
   }
 
   async storeValuesInDb() {
-    const data = {
-      asset: 'LRC',
-      balance: '1484.17752970',
-      priceUSD: '2.11',
-      priceBRL: '11.86',
-      balanceUSD: '3126.87',
-      balanceBRL: '17607.38',
-    };
+    const values = await this.getAccountAvailableBalance();
 
-    await this.balanceHistoryRepository.insertHistoryInput(data);
+    for (const value of values as any) {
+      await this.balanceHistoryRepository.insertHistoryInput(value);
+    }
   }
 
   async getBalance(): Promise<Object> {
-    await this.storeValuesInDb();
     return this.getAccountAvailableBalance();
   }
 }
