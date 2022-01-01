@@ -1,29 +1,29 @@
 FROM node:14 AS builder
 
 # Create app directory
-WORKDIR /app/
+WORKDIR /app
 
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
-COPY package*.json /app/
+COPY package*.json /app
 
 # Install app dependencies
-RUN cd /app/ && npm install
+RUN cd /app && npm install
 
-COPY . /app/
+COPY . /app
 
-RUN cd /app/ && npm run build
+RUN cd /app && npm run build
 
 FROM node:14
 
 EXPOSE 3000
 
-RUN mkdir /app/
+RUN mkdir /app
 
-WORKDIR /app/
+WORKDIR /app
 
-COPY --from=builder /app/node_modules /app/node_modules/
-COPY --from=builder /app/package*.json /app/
-COPY --from=builder /app/dist /app/dist/
-COPY --from=builder /app/prisma /app/prisma/
+COPY --from=builder /app/node_modules /app/node_modules
+COPY --from=builder /app/package*.json /app
+COPY --from=builder /app/dist /app/dist
+COPY --from=builder /app/prisma /app/prisma
 
 CMD [ "npm", "run", "deploy:production" ]
