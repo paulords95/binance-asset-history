@@ -84,7 +84,7 @@ export class BinanceService {
     return this.getAccountAvailableBalance();
   }
 
-  async getBalanceHistory(): Promise<Object> {
-    return this.balanceHistoryRepository.getBalance();
+  async getBalanceHistory(filter): Promise<Object> {
+    return this.balanceHistoryRepository.getBalance(filter);
   }
 }

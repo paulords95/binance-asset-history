@@ -9,8 +9,12 @@ import { PrismaService } from '../prisma.service';
 export class BalanceHistoryRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getBalance() {
-    return this.prisma.balancehistory.findMany();
+  async getBalance(filter) {
+    return this.prisma.balancehistory.findMany({
+      where: {
+        storeFreq: filter,
+      },
+    });
   }
 
   async insertHistoryInput(data) {

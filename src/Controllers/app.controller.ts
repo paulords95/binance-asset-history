@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { BinanceService } from 'src/Models/Binance/binance.service';
 import { AppService } from '../Models/app.service';
 
@@ -19,7 +19,7 @@ export class AppController {
     return this.binanceService.getBalanceBianance();
   }
   @Get('/binance-history')
-  GetBalanceHistory() {
-    return this.binanceService.getBalanceHistory();
+  GetBalanceHistory(@Query('filter') filter: string) {
+    return this.binanceService.getBalanceHistory(filter);
   }
 }
