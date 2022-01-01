@@ -1,11 +1,8 @@
 version: '3.8'
 services:
-  nest-api:
+  backend-api:
     container_name: backend-assets
-    image: docker.pkg.github.com/paulords95/binance-asset-history/assets-binance
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/paulords95/binance-asset-history/assets-binance:latest
     ports:
       - 3000:3000
     depends_on:
