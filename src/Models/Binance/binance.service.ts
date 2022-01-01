@@ -89,6 +89,18 @@ export class BinanceService {
     page: number,
     limit: number,
   ): Promise<Object> {
-    return this.balanceHistoryRepository.getBalance(filter, page, limit);
+    const data = await this.balanceHistoryRepository.getBalance(
+      filter,
+      page,
+      limit,
+    );
+    let formatedObj;
+
+    formatedObj = data;
+    for (const item of formatedObj) {
+      item.localDate = item.data.toLocaleDateString();
+      item.localHour = item.data.toLocaleTimeString();
+    }
+    return formatedObj;
   }
 }
