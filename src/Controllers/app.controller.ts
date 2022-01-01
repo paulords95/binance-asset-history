@@ -19,7 +19,15 @@ export class AppController {
     return this.binanceService.getBalanceBianance();
   }
   @Get('/binance-history')
-  GetBalanceHistory(@Query('filter') filter: string) {
-    return this.binanceService.getBalanceHistory(filter);
+  GetBalanceHistory(
+    @Query('filter') filter: string,
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+  ) {
+    return this.binanceService.getBalanceHistory(
+      filter,
+      parseInt(page.toString()),
+      parseInt(limit.toString()),
+    );
   }
 }
