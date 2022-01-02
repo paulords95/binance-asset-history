@@ -17,6 +17,8 @@ FROM node:14
 
 EXPOSE 3000
 
+RUN apt-get -y install tzdata
+
 RUN mkdir /app
 
 WORKDIR /app
