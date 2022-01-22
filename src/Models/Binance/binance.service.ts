@@ -36,6 +36,8 @@ export class BinanceService {
     await this.storeValuesInDb('EVERY_DAY_AT_NOON');
   }
 
+  formatUSDPrice(token) {}
+
   getAccountAvailableBalance() {
     const balanceAvailable = [];
     return new Promise(async (resolve, reject) => {
@@ -47,17 +49,36 @@ export class BinanceService {
           const name = balance[0] as string;
           const assetBalance = balance[1] as any;
           if (assetBalance.available > 0.0001) {
+            const pricesObjUSD = {};
+            const pricesObjBRL = {};
+            let dollarBRLPrice = 0 as number;
+
+            for (const tick of Object.entries(ticker)) {
+              if (tick[0].includes(name) && tick[0].includes('USD')) {
+                pricesObjUSD[name] = tick[1];
+              }
+
+              if (tick[0].includes(name) && tick[0].includes('BRL')) {
+                pricesObjBRL[name] = tick[1];
+              }
+
+              if (tick[0] === 'USDTBRL') {
+                dollarBRLPrice = tick[1] as number;
+              }
+            }
             const assetObj = {
               asset: name,
               balance: assetBalance.available,
-              priceUSD: parseFloat(ticker.LRCUSDT).toFixed(2).toString(),
-              priceBRL: (ticker.LRCUSDT * ticker.USDTBRL).toFixed(2).toString(),
+              priceUSD: parseFloat(pricesObjUSD[name]).toFixed(2).toString(),
+              priceBRL: (pricesObjUSD[name] * dollarBRLPrice)
+                .toFixed(2)
+                .toString(),
               balanceUSD: (
-                parseFloat(ticker.LRCUSDT) * assetBalance.available
+                parseFloat(pricesObjUSD[name]) * assetBalance.available
               ).toFixed(2),
               balanceBRL: (
-                ticker.LRCUSDT *
-                ticker.USDTBRL *
+                pricesObjUSD[name] *
+                dollarBRLPrice *
                 assetBalance.available
               ).toFixed(2),
             };
@@ -72,16 +93,30 @@ export class BinanceService {
 
   async storeValuesInDb(freq) {
     const values = await this.getAccountAvailableBalance();
+    console.log(values);
+    const totalBalance = {
+      USD: 0,
+      BRL: 0,
+    };
+
+    for (const value of values as any) {
+      totalBalance.USD = totalBalance.USD + parseFloat(value.balanceUSD);
+      totalBalance.BRL = totalBalance.BRL + parseFloat(value.balanceBRL);
+    }
 
     for (const value of values as any) {
       value.storeFreq = freq;
-
+      value.totalBalanceUSD = totalBalance.USD.toFixed(2);
+      value.totalBalanceBRL = totalBalance.BRL.toFixed(2);
       await this.balanceHistoryRepository.insertHistoryInput(value);
     }
+    console.log(totalBalance);
+    return {};
   }
 
   async getBalanceBianance(): Promise<Object> {
-    return this.getAccountAvailableBalance();
+    return this.storeValuesInDb('teste');
+    //return this.getAccountAvailableBalance();
   }
 
   async getBalanceHistory(
