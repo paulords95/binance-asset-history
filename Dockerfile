@@ -4,7 +4,7 @@ FROM node:14 AS builder
 WORKDIR /app
 
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
-COPY package*.json /app
+COPY package*.json /app/
 
 # Install app dependencies
 RUN cd /app && npm install
