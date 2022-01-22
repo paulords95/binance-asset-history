@@ -93,7 +93,6 @@ export class BinanceService {
 
   async storeValuesInDb(freq) {
     const values = await this.getAccountAvailableBalance();
-    console.log(values);
     const totalBalance = {
       USD: 0,
       BRL: 0,
