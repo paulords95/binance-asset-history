@@ -110,13 +110,10 @@ export class BinanceService {
       value.totalBalanceBRL = totalBalance.BRL.toFixed(2);
       await this.balanceHistoryRepository.insertHistoryInput(value);
     }
-    console.log(totalBalance);
-    return {};
   }
 
   async getBalanceBianance(): Promise<Object> {
-    return this.storeValuesInDb('teste');
-    //return this.getAccountAvailableBalance();
+    return this.getAccountAvailableBalance();
   }
 
   async getBalanceHistory(
