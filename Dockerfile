@@ -8,7 +8,7 @@ RUN cd /app && npm install
 
 COPY . /app
 
-RUN cd /app && npm run build
+RUN cd /app && npm run prisma:generate && npm run build
 
 FROM node:14
 
@@ -25,4 +25,4 @@ COPY --from=builder /app/package*.json /app/
 COPY --from=builder /app/dist /app/dist
 COPY --from=builder /app/prisma /app/prisma
 
-CMD [ "npm", "run", "deploy:production" ]
+CMD [ "npm", "run", "start:prod" ]
