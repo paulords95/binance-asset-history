@@ -5,6 +5,7 @@ WORKDIR /usr/src/app
 COPY . ./
 
 RUN rm -f package-lock.json
+RUN npm install -g prisma
 RUN npm install
 
 RUN yarn prisma generate
