@@ -1,28 +1,15 @@
-FROM node:14 AS builder
-
-WORKDIR /app
-
-COPY package*.json /app/
-
-RUN cd /app && npm install
-
-COPY . /app
-
-RUN cd /app && npm run prisma:generate && npm run build
-
 FROM node:14
 
+WORKDIR /usr/src/app
+
+COPY . ./
+
+RUN rm -f package-lock.json
+RUN npm install
+
+RUN npm run prisma:generate
+RUN npm run build
+
+
 EXPOSE 3000
-
-RUN apt-get -y install tzdata
-
-RUN mkdir /app
-
-WORKDIR /app
-
-COPY --from=builder /app/node_modules /app/node_modules
-COPY --from=builder /app/package*.json /app/
-COPY --from=builder /app/dist /app/dist
-COPY --from=builder /app/prisma /app/prisma
-
-CMD [ "npm", "run", "start:prod" ]
+CMD ["npm", "run", "start:prod"]
