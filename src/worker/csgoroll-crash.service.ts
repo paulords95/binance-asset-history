@@ -5,6 +5,12 @@ import { CsgoRollCrashRepository } from 'src/database/repository/csgoroll-crash.
 
 puppeteer.use(StealthPlugin());
 
+declare global {
+  interface Window {
+    puppeteerMutationListener?: any;
+  }
+}
+
 @Injectable()
 export class CsgoRollCrashService {
   constructor(
@@ -28,27 +34,23 @@ export class CsgoRollCrashService {
       waitUntil: 'networkidle2',
     });
 
-    async function monitor(selector, callback, prevValue) {
+    let prevValue = '';
+
+    setInterval(async () => {
       const newVal = await page.evaluate(async () => {
         const el = document.querySelector('.games > div > span');
         return el.textContent;
       });
-      if (newVal !== prevValue) {
-        callback(newVal);
-      }
-      await new Promise((_) => setTimeout(_, 5000));
-      monitor(selector, callback, newVal);
-    }
 
-    monitor(
-      '.games > div > span',
-      (value) => {
+      if (prevValue !== newVal) {
+        prevValue = newVal;
+
         const crashObj = {
-          crashValue: parseFloat(parseFloat(value).toFixed(2)),
+          crashValue: parseFloat(parseFloat(newVal).toFixed(2)),
         };
+
         this.csgoRollCrashRepository.insertDataInput(crashObj);
-      },
-      '',
-    );
+      }
+    }, 5000);
   }
 }
