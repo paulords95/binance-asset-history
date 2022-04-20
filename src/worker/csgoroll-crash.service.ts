@@ -36,7 +36,7 @@ export class CsgoRollCrashService {
       if (newVal !== prevValue) {
         callback(newVal);
       }
-      await new Promise((_) => setTimeout(_, 1000));
+      await new Promise((_) => setTimeout(_, 5000));
       monitor(selector, callback, newVal);
     }
 
