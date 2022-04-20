@@ -8,6 +8,7 @@ RUN rm -f package-lock.json
 RUN npm install -g prisma
 RUN npm install
 
+RUN npm run prisma:generate
 RUN npm run build
 
 
