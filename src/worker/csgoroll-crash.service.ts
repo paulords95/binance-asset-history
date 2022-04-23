@@ -23,8 +23,12 @@ export class CsgoRollCrashService {
       args: [
         '--disable-gpu',
         '--disable-dev-shm-usage',
-        '--disable-setuid-sandbox',
         '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-accelerated-2d-canvas',
+        '--no-first-run',
+        '--no-zygote',
+        '--single-process',
       ],
     });
 
