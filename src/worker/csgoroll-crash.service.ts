@@ -34,13 +34,12 @@ export class CsgoRollCrashService {
 
     const page = await browser.newPage();
 
-    await page.goto('https://www.csgoroll.com/en/crash', {
-      waitUntil: 'networkidle2',
-    });
-
     let prevValue = '';
 
     setInterval(async () => {
+      await page.goto('https://www.csgoroll.com/en/crash', {
+        waitUntil: 'networkidle2',
+      });
       const newVal = await page.evaluate(async () => {
         const el = document.querySelector('.games > div > span');
         return el.textContent;
@@ -55,6 +54,7 @@ export class CsgoRollCrashService {
 
         this.csgoRollCrashRepository.insertDataInput(crashObj);
       }
+      await page.close();
     }, 5000);
   }
 }
