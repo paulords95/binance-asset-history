@@ -7,6 +7,5 @@ export class WorkerInitService implements OnModuleInit {
 
   onModuleInit() {
     console.log('>>> Starting workers...');
-    this.csgorollcrashService.subscribe();
   }
 }
