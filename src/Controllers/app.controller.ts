@@ -40,11 +40,13 @@ export class AppController {
     @Query('filter') filter: string,
     @Query('page') page = 1,
     @Query('limit') limit = 10,
+    @Query('asset') asset: string,
   ) {
     return this.binanceService.getBalanceHistory(
       filter,
       parseInt(page.toString()),
       parseInt(limit.toString()),
+      asset,
     );
   }
 }

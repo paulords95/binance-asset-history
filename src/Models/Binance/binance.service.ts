@@ -119,11 +119,13 @@ export class BinanceService {
     filter: string,
     page: number,
     limit: number,
+    asset?: string,
   ): Promise<Object> {
     const data = await this.balanceHistoryRepository.getBalance(
       filter,
       page,
       limit,
+      asset,
     );
     let formatedObj;
 
